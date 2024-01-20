@@ -112,7 +112,9 @@ class PuppetClassTrace:
         return classes
 
     def _recursiveSearch(self, includes: dict):
+        # Iterate over current layer includes dictionary
         for pup_class in includes.keys():
+            # If key exists and is list, try to get includes for this class and dive into it recursively
             if includes[pup_class] and isinstance(includes[pup_class], list):
                 subincludes = {}
                 for classname in includes[pup_class]:
@@ -120,15 +122,41 @@ class PuppetClassTrace:
 
                 includes[pup_class] = subincludes
                 self._recursiveSearch(subincludes)
-
+            # If current key is dict dive into it recursively
             elif includes[pup_class] and isinstance(includes[pup_class], dict):
                 self._recursiveSearch(includes[pup_class])
+            # In the end just pass
             else:
                 pass
         return includes
 
     def createIncludesTree(self, class_name):
-        self.includes_tree[class_name] = self._getIncludes(class_name)
-        final_includes_tree = self._recursiveSearch(self.includes_tree)
-        # print(json.dumps(final_includes_tree, indent=4))
+        self.includes_tree[class_name] = self._getIncludes(
+            class_name
+        )  # Get depth 1 includes
+        final_includes_tree = self._recursiveSearch(
+            self.includes_tree
+        )  # Sarch for other includes
         return final_includes_tree
+
+    def classSeek(
+        self, classTree: dict, targetClass, classChain=None, classChains=None
+    ):
+        if classChain is None:
+            classChain = []
+        if classChains is None:
+            classChains = []
+
+        # Run loop over class tree
+        for key, value in classTree.items():
+            # Add key to current path
+            current_path = classChain + [key]
+
+            # If key = target class then add path to paths list
+            if key == targetClass:
+                classChains.append(" => ".join(current_path))
+
+            # If dict then run recursive to it
+            if isinstance(value, dict):
+                self.classSeek(value, targetClass, current_path, classChains)
+        return classChains

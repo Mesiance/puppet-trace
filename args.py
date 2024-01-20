@@ -33,6 +33,17 @@ class GetArgs:
             dest="puppet_code_dir",
         )
 
+        availableFormats = ["tree", "json", "yaml"]
+        parser.add_argument(
+            "--format",
+            type=str,
+            default="tree",
+            choices=availableFormats,
+            help=f"Output format. Available options {str(availableFormats)}",
+            metavar="<format>",
+            dest="format",
+        )
+
         parser.add_argument("classname", default=None, metavar="class name")
 
         return parser

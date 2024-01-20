@@ -1,9 +1,10 @@
 import yaml
+import json
 
 
 class OutputFormatter:
     def __init__(self, output) -> None:
-        pass
+        self.output = output
 
     def _preformatOutput(self, rawOutputList: list) -> list:
         preformattedOutputList = []
@@ -99,17 +100,18 @@ class OutputFormatter:
             spaceMiltiplier -= 1
         return spaceMiltiplier
 
-    def output(self, output):
+    def outputTree(self):
         # Convert class tree to yaml
-        outputLine = str(yaml.dump(output))
+        inputLine = str(yaml.dump(self.output))
         # Create list by spliting string by new line
-        rawOutputList = outputLine.split("\n")
+        rawOutputList = inputLine.split("\n")
         # Create list of lists, which contains class name, current amount of spaces, index, and amount of spaces at next line
         preformattedOutputList = self._preformatOutput(rawOutputList)
         # Create dict which contains number of strings with each amount of spaces
         spaceCountDict = self._getOutputStats(preformattedOutputList)
         # Create dict to indicating depth of class tree
         treeDepthDict = self._createDepthInfoDict(spaceCountDict)
+        treeOutputList = []
 
         # Check of input contain only one string, and return in as output
         if len(preformattedOutputList) == 1:
@@ -189,4 +191,25 @@ class OutputFormatter:
                     + "└─ "
                     + lineInfo[0]
                 )
-            print(outputLine)
+            treeOutputList.append(outputLine)
+        treeOutputLine = "\n".join(treeOutputList)
+        print(treeOutputLine)
+        return treeOutputLine
+
+    def outputJson(self):
+        print(json.dumps(self.output, indent=2))
+
+    def outputYaml(self):
+        inputLine = str(yaml.dump(self.output))
+        print(inputLine)
+
+    def getClassGraph(self, format):
+        if format == "tree":
+            self.outputTree()
+        elif format == "json":
+            self.outputJson()
+        elif format == "yaml":
+            self.outputYaml()
+        else:
+            print(f'Invalid format "{format}" specified. Using default format - "tree"')
+            self.outputTree()
