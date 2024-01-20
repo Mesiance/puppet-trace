@@ -1,2 +1,5 @@
 __pycache__
 trash
+build
+dist
+puppet_trace.egg-info

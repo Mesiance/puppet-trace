@@ -1,7 +1,7 @@
 import cProfile
-from puppet_trace import PuppetClassTrace
-from args import GetArgs
-from out import OutputFormatter
+from puppet_trace.puppet_trace import PuppetClassTrace
+from puppet_trace.args import GetArgs
+from puppet_trace.out import OutputFormatter
 
 parser = GetArgs().parser()
 args = parser.parse_args()
