@@ -3,3 +3,4 @@ trash
 build
 dist
 puppet_trace.egg-info
+.env

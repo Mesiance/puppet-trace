@@ -32,7 +32,7 @@ class PuppetClassTrace:
 
         if not pp_files:
             print(
-                "No one .pp files found. Maybe you forgot about --path argument?\
+                f"No one .pp files found at {path}. Maybe you forgot about --path argument?\
                 \nType -h or --help to get more details"
             )
             exit(1)

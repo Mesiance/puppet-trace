@@ -1,17 +1,18 @@
 import cProfile
 from puppet_trace.puppet_trace import PuppetClassTrace
-from puppet_trace.args import GetArgs
+from puppet_trace.args import *
 from puppet_trace.out import OutputFormatter
-
-parser = GetArgs().parser()
-args = parser.parse_args()
-root_class = args.classname
-class_to_seek = args.class_seek
-puppet_code_dir = args.puppet_code_dir
-format = args.format
 
 
 def main():
+    parser = GetArgs().parseArgs()
+    args = parser.parse_args()
+    root_class = args.classname
+    class_to_seek = args.class_seek
+    puppet_code_dir = args.puppet_code_dir
+    format = args.format
+    env_file = args.env_file
+
     puppetClassTraceObject = PuppetClassTrace(puppet_code_dir)
     outputTree = puppetClassTraceObject.createIncludesTree(root_class)
     if class_to_seek:
